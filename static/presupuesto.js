@@ -51,7 +51,8 @@
     enviar.hidden = n !== pasos.length - 1;
     error.hidden = true;
     if (n === pasos.length - 1) armarResumen();
-    if (enfocar) pasos[n].querySelector('legend').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    var quieto = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (enfocar) pasos[n].querySelector('legend').scrollIntoView({ block: 'nearest', behavior: quieto ? 'auto' : 'smooth' });
     if (enfocar) { var primero = pasos[n].querySelector('input, textarea'); if (primero) primero.focus({ preventScroll: true }); }
   }
 
@@ -74,6 +75,9 @@
   f.addEventListener('submit', function (e) {
     if (!valor('tipo')) { e.preventDefault(); mostrar(0, true); sig.click(); }
   });
+  // Con JS el «qué» ya se validó acá: WhatsApp se abre en otra pestaña y la
+  // página queda. Sin JS va en la misma, así un error vuelve a esta pestaña.
+  f.target = '_blank';
 
   // Volvió del servidor con un error: abre en el paso 1, con el aviso.
   var habiaError = !error.hidden;

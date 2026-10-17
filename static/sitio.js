@@ -78,20 +78,32 @@
 
   /* ── Ficha: cantidad − + y el precio en el botón ─────────────────────── */
   document.querySelectorAll('form[data-ficha]').forEach(function (f) {
-    var cant = f.elements.cantidad, cta = f.querySelector('[data-cta]');
+    var cant = f.elements.cantidad, cta = f.querySelector('[data-cta]'), nota = f.querySelector('[data-nota-cant]');
+    function minimo() { return parseInt(cant.min, 10) || 1; }
+    function maximo() { return parseInt(cant.max, 10) || 99; }
     f.querySelectorAll('[data-cant]').forEach(function (b) {
       b.hidden = false;
       b.addEventListener('click', function () {
-        var v = Math.min(99, Math.max(1, (parseInt(cant.value, 10) || 1) + Number(b.dataset.cant)));
+        var v = Math.min(maximo(), Math.max(minimo(), (parseInt(cant.value, 10) || minimo()) + Number(b.dataset.cant)));
         cant.value = v; pintar();
       });
+    });
+    // Lo escrito a mano se lleva al rango al salir del campo; si pidió más
+    // del máximo, el aviso lo manda al precio mayorista.
+    cant.addEventListener('change', function () {
+      var n = parseInt(cant.value, 10);
+      var pasado = n > maximo();
+      cant.value = Math.min(maximo(), Math.max(minimo(), n || minimo()));
+      if (nota) { nota.hidden = !pasado; if (pasado) avisar(nota.textContent); }
+      pintar();
     });
     function pintar() {
       if (!cta) return;
       var elegida = f.querySelector('input[name="producto_id"]:checked') || f.querySelector('input[type="hidden"][name="producto_id"]');
       var precio = elegida && elegida.dataset.precio ? Number(elegida.dataset.precio) / 100 : null;
-      var n = parseInt(cant.value, 10) || 1;
-      cta.textContent = 'Agregar al pedido' + (precio ? ' · ' + pesos(precio * n) : '');
+      var n = parseInt(cant.value, 10);
+      var ok = n >= minimo() && n <= maximo();
+      cta.textContent = 'Agregar al pedido' + (precio && ok ? ' · ' + pesos(precio * n) : '');
       if (elegida && elegida.type === 'radio') {
         var p = document.querySelector('p[data-precio]');
         if (p && precio) p.textContent = pesos(precio);
@@ -116,9 +128,21 @@
     });
   });
 
-  /* ── Catálogo: el orden se aplica al elegirlo ────────────────────────── */
+  /* ── Catálogo: el orden se aplica al elegirlo con el mouse o el dedo. Con
+     el teclado cada flecha cambia la opción: recargar ahí le saca el foco
+     (WCAG 3.2.2). Se aplica con Enter o con el botón, que aparece. ───── */
   if (!ESTATICO) document.querySelectorAll('select[data-autoenviar]').forEach(function (s) {
-    s.addEventListener('change', function () { s.form.submit(); });
+    var teclado = false;
+    s.addEventListener('pointerdown', function () { teclado = false; });
+    s.addEventListener('keydown', function (e) {
+      teclado = true;
+      if (e.key === 'Enter') { e.preventDefault(); s.form.submit(); }
+    });
+    s.addEventListener('change', function () {
+      if (!teclado) { s.form.submit(); return; }
+      var b = s.form.querySelector('.js-ocultar');
+      if (b) b.classList.remove('js-ocultar');
+    });
   });
 
   /* ── Chips que filtran una grilla en el lugar (home, trabajos) ────────── */
@@ -164,6 +188,11 @@
             return;
           }
           var actuales = document.querySelector('[data-lineas]');
+          // Lo escrito en el campo de cada línea (el color) sigue ahí.
+          actuales.querySelectorAll('input[data-detalle]').forEach(function (x) {
+            var igual = nuevas.querySelector('input[name="' + x.name + '"]');
+            if (igual) igual.value = x.value;
+          });
           actuales.replaceWith(nuevas);
           var tot = document.querySelector('.tot'), totNuevo = doc.querySelector('.tot');
           if (tot && totNuevo) tot.innerHTML = totNuevo.innerHTML;

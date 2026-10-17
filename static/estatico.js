@@ -94,6 +94,8 @@
       Object.keys(pedido).forEach(function (k) {
         var p = PRODUCTOS[k];
         lineas.push('- ' + pedido[k] + ' x ' + p.n + (p.e ? ' (' + p.e + ')' : '') + ' — ' + pesos(p.p * pedido[k]));
+        var det = (elegido[k] || '').replace(/\s+/g, ' ').trim().slice(0, 100);
+        if (det) lineas.push('   ' + NOMBRE_DETALLE + ': ' + det);
       });
       lineas.push('Total: ' + pesos(resumen(pedido).total));
       var extra = [], d = f.elements;
@@ -153,6 +155,10 @@
 
   /* ── La revisión del pedido ──────────────────────────────────────────── */
   var lista = document.querySelector('[data-lineas-estatico]');
+  // El campo de cada línea (p. ej. el color): lo escrito se guarda acá para
+  // que sobreviva a los − + que redibujan la lista.
+  var molde = document.querySelector('template[data-elegir-estatico]'), elegido = {};
+  var NOMBRE_DETALLE = molde ? molde.content.querySelector('span').firstChild.textContent.trim() : '';
   function pintarPedido() {
     var c = pintarEncabezado(), r = resumen(c);
     if (!lista) return;
@@ -181,6 +187,16 @@
       li.querySelector('[data-d="1"]').setAttribute('aria-label', 'Uno más de ' + p.n);
       li.querySelector('[data-quitar]').setAttribute('aria-label', 'Quitar ' + p.n + ' del pedido');
       li.dataset.id = k;
+      if (p.c && molde) {
+        var campo = molde.content.firstElementChild.cloneNode(true), inp = campo.querySelector('input');
+        inp.name = 'detalle_' + k;
+        inp.value = elegido[k] || '';
+        inp.setAttribute('aria-describedby', 'op-' + k);
+        campo.querySelector('small').id = 'op-' + k;
+        campo.querySelector('small').textContent = p.c;
+        inp.addEventListener('input', function () { elegido[k] = inp.value; });
+        li.appendChild(campo);
+      }
       lista.appendChild(li);
     });
     document.querySelector('[data-tot-n]').textContent = r.unidades + (r.unidades === 1 ? ' producto' : ' productos');
