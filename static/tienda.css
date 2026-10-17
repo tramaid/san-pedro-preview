@@ -1,0 +1,152 @@
+/* ============================================================
+   San Pedro · la tienda: catálogo, ficha y revisión del pedido.
+   Sale de referencia/fuente-dc/tienda-*.dc.html. Colores: solo tokens.
+   ============================================================ */
+
+/* cabecera del catálogo (tono sobre tono) */
+.cab{position:relative;background:var(--crema);overflow:hidden}
+.cab .w{position:relative;z-index:1;padding-top:56px;padding-bottom:56px}
+.cab h1{font-size:clamp(44px,5.6vw,80px)}
+.cab .lead{margin:16px 0 0;max-width:46ch;font-size:19px;color:var(--texto-suave)}
+
+/* herramientas: chips de categoría, búsqueda y orden */
+.tools{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 24px;padding-top:32px;padding-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;list-style:none;margin:0;padding:0}
+.chips a{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border-radius:9999px;border:1px solid var(--borde-campo);background:var(--blanco-puro);font-weight:700;font-size:15px;color:var(--tinta);text-decoration:none;white-space:nowrap}
+.chips a:hover{border-color:var(--tinta)}
+.chips .ct{font-size:13px;color:var(--texto-chico);font-weight:700}
+.chips a[aria-current="true"]{background:var(--tinta);color:var(--blanco-puro);border-color:var(--tinta)}
+.chips a[aria-current="true"] .ct{color:var(--beige)}
+.filtros{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:0}
+.campo{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:1px solid var(--borde-campo);border-radius:9999px;background:var(--blanco-puro);color:var(--texto-chico)}
+.campo svg{width:16px;height:16px;flex:none}
+.campo input,.campo select{border:0;outline:0;background:transparent;font:600 15px var(--f-texto);color:var(--tinta);min-width:0}
+.campo input{width:200px}
+.campo input::placeholder{color:var(--texto-chico)}
+.campo:focus-within{outline:3px solid var(--tinta);outline-offset:2px}
+.filtros .btn{min-height:44px;padding:8px 18px;font-size:15px}
+.js .filtros .js-ocultar{display:none}
+.cuenta{margin:20px 0 0;font-size:15px;color:var(--texto-chico)}
+.vacio{grid-column:1/-1;text-align:center;padding:64px 16px;color:var(--texto-suave)}
+.vacio .t{font-size:30px;margin-bottom:8px;color:var(--tinta)}
+
+/* precio por mayor: aparte, nunca en las descripciones */
+.mayor{margin-top:80px;margin-bottom:96px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 32px;padding:32px 40px;border-radius:28px;border:1px solid var(--borde);background:var(--blanco-puro)}
+.mayor h2{font-size:28px}
+.mayor p{margin:6px 0 0;color:var(--texto-suave);max-width:52ch}
+
+/* ficha */
+.ficha-g{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:start;padding-top:40px;padding-bottom:40px}
+.ficha-g .migas{grid-column:1/13}
+.galeria{grid-column:1/8;display:grid;grid-template-columns:88px minmax(0,1fr);gap:16px;position:sticky;top:16px}
+.miniaturas{display:flex;flex-direction:column;gap:12px;list-style:none;margin:0;padding:0}
+.miniaturas a{display:block;width:88px;aspect-ratio:4/5;border-radius:12px;overflow:hidden;border:2px solid transparent;background:var(--papel)}
+.miniaturas a[aria-current="true"]{border-color:var(--tinta)}
+.miniaturas img{width:100%;height:100%;object-fit:cover}
+.foto-g{width:100%;aspect-ratio:4/5;border-radius:24px;overflow:hidden;background:var(--papel)}
+.foto-g img{width:100%;height:100%;object-fit:cover}
+.info{grid-column:8/13;padding-left:24px}
+.info h1{font-size:clamp(36px,3.6vw,52px);margin:12px 0 16px}
+.info .precio{font-size:28px;gap:6px 12px}
+.info .precio s{font-size:18px}
+.info .precio .desde{font-size:16px}
+.info .precio .cons{font-size:22px;color:var(--tinta);font-family:var(--f-titulo);font-weight:600}
+.info .txt{margin:16px 0 0;font-size:18px;color:var(--texto-suave)}
+.info .marcas{position:static;margin-top:14px}
+.info .marca{border:1px solid var(--borde)}
+.bloque{margin:28px 0 0;padding:0;border:0;min-width:0}
+.bloque legend{margin:0 0 12px;padding:0;font-size:15px;font-weight:800;letter-spacing:.04em}
+.grupo{margin:0 0 14px}
+.grupo p{margin:0 0 8px;font-size:14px;font-weight:700;color:var(--texto-chico)}
+.opciones{display:flex;flex-wrap:wrap;gap:10px;list-style:none;margin:0;padding:0}
+.opcion{position:relative;display:block}
+.opcion input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.opcion>span{min-width:132px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:56px;padding:9px 16px;border-radius:14px;border:1px solid var(--borde-campo);background:var(--blanco-puro);font:700 15px/1.25 var(--f-texto);color:var(--tinta);cursor:pointer}
+.opcion .pr{font-size:14px;font-weight:600;color:var(--texto-chico)}
+.opcion input:checked+span{border:2px solid var(--tinta);padding:8px 15px;background:var(--fondo)}
+.opcion input:focus-visible+span{outline:3px solid var(--tinta);outline-offset:2px}
+.opcion input:disabled+span{opacity:.6;cursor:not-allowed}
+.opcion .nota{font-size:12px;font-weight:800;color:var(--tinta);background:var(--mostaza);border-radius:9999px;padding:1px 8px;margin-top:2px}
+.compra{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:28px}
+.compra .btn-ink{flex:1 1 220px}
+.aviso{margin:10px 0 0;font-size:14px;color:var(--texto-chico)}
+.consulta{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px 20px}
+.consulta a{font-weight:700;font-size:15px;text-underline-offset:4px}
+.mayor-mini{margin-top:28px;display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;padding:16px 20px;border-radius:16px;background:var(--crema)}
+.mayor-mini p{margin:0;font-size:15px;color:var(--texto-suave)}
+.mayor-mini b{color:var(--tinta)}
+.mayor-mini a{font-weight:800;font-size:15px;white-space:nowrap;text-underline-offset:4px}
+.datos{margin:28px 0 0;display:grid;grid-template-columns:max-content 1fr;gap:10px 24px;padding-top:24px;border-top:1px solid var(--borde);font-size:15px}
+.datos dt{font-weight:800}
+.datos dd{margin:0;color:var(--texto-suave)}
+.garantias{display:flex;flex-wrap:wrap;gap:8px 20px;margin:24px 0 0;padding:0;list-style:none;font-size:14px;font-weight:700;color:var(--texto-suave)}
+.garantias li{display:inline-flex;align-items:center;gap:8px}
+.relac{padding-top:56px;padding-bottom:96px}
+.relac-t{font-size:clamp(30px,3vw,42px);margin-bottom:8px}
+
+/* revisión del pedido */
+.ped{padding-top:40px;padding-bottom:96px}
+.ped h1{font-size:clamp(40px,4.6vw,64px);margin:0 0 8px}
+.ped .bajada{margin:0;color:var(--texto-chico)}
+.ped-g{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:start;margin-top:32px}
+.lineas{grid-column:1/8;list-style:none;margin:0;padding:0;border-top:1px solid var(--borde)}
+.linea{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:8px 20px;align-items:center;padding:20px 0;border-bottom:1px solid var(--borde)}
+.linea-f{grid-row:1/3;width:96px;aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:var(--papel)}
+.linea-f img{width:100%;height:100%;object-fit:cover}
+.linea h2{margin:0;font-family:var(--f-titulo);font-variation-settings:"SOFT" 100;font-size:20px;font-weight:600;line-height:1.25}
+.linea h2 a{text-decoration:none}
+.linea .var,.linea .unit{margin:2px 0 0;font-size:14px;color:var(--texto-chico);font-variant-numeric:tabular-nums}
+.linea .falta{margin:6px 0 0;font-size:14px;font-weight:700;color:var(--alerta)}
+.linea .sub{grid-column:3;grid-row:1;margin:0;font-size:18px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.linea-acc{grid-column:2/4;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.linea-acc form{margin:0}
+.linea .cant{min-height:44px}
+.linea .cant button{height:42px;width:42px}
+.quitar{border:0;background:none;padding:8px 0;font:700 14px var(--f-texto);color:var(--texto-chico);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.quitar:hover{color:var(--tinta)}
+.resumen{grid-column:8/13;position:sticky;top:16px;margin-left:24px;padding:28px;border-radius:24px;background:var(--crema)}
+.resumen h2{font-size:26px;margin:0 0 16px}
+.tot{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin:0;padding:14px 0;border-top:1px solid var(--borde);font-size:15px}
+.tot b{font-size:26px;font-variant-numeric:tabular-nums}
+.nota-env{margin:0 0 18px;font-size:14px;color:var(--texto-suave)}
+.resumen .form{display:grid;gap:14px;margin:6px 0 20px}
+.resumen .btn{width:100%}
+.resumen .acepto{margin:12px 0 0;font-size:13px;color:var(--texto-chico)}
+.seguir{display:block;margin-top:14px;text-align:center;font-weight:700;font-size:15px;text-underline-offset:4px}
+.ped-vacio{text-align:center;padding:72px 16px 24px}
+.ped-vacio .t{font-size:30px}
+.ped-vacio p{color:var(--texto-suave);margin:8px 0 24px}
+
+/* pedido enviado */
+.listo{max-width:640px;margin:0 auto;padding:56px 0 96px;text-align:center}
+.listo h1{font-size:clamp(40px,4.6vw,60px);margin:12px 0 16px}
+.listo p{color:var(--texto-suave);margin:0 0 24px}
+.listo .botones{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+
+@media (max-width:1040px){
+  .galeria,.info{grid-column:1/13}
+  .galeria{position:static}
+  .info{margin-top:32px;padding-left:0}
+  .lineas,.resumen{grid-column:1/13}
+  .resumen{margin:32px 0 0;position:static}
+}
+@media (max-width:760px){
+  .chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;margin:0 -24px;padding-left:24px;padding-right:24px}
+  .filtros{width:100%}
+  .campo{flex:1 1 200px}
+  .campo input{width:100%}
+  .galeria{grid-template-columns:minmax(0,1fr)}
+  .miniaturas{flex-direction:row;order:2}
+  .miniaturas a{width:72px}
+  .mayor{padding:24px}
+}
+@media (max-width:560px){
+  .chips{margin:0 -16px;padding-left:16px;padding-right:16px}
+  .datos{grid-template-columns:1fr;gap:2px}
+  .datos dd{margin-bottom:10px}
+  .linea{grid-template-columns:72px minmax(0,1fr);gap:6px 14px}
+  .linea-f{width:72px}
+  .linea .sub{grid-column:2;grid-row:auto;text-align:left;font-size:16px}
+  .linea-acc{grid-column:1/3}
+  .resumen{padding:22px}
+}

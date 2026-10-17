@@ -1,0 +1,72 @@
+/* ============================================================
+   San Pedro · la marca
+   La paleta sale del logo de Home & Deco (css/tokens.css del paquete de
+   diseño). Es la FUENTE DE VERDAD: en ningún otro CSS hay colores ni fuentes;
+   todo lo demás los usa por su nombre.
+   ============================================================ */
+@font-face{font-family:Fraunces; src:url("fuentes/fraunces-latin.woff2") format("woff2"); font-weight:400 700; font-display:swap;
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:"Nunito Sans"; src:url("fuentes/nunito-sans-latin.woff2") format("woff2"); font-weight:400 800; font-display:swap;
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+
+:root{
+  --pizarra:#6b747e;        /* íconos y ornamentos; hover de los botones tinta */
+  --coral:#da8a72;          /* subrayado del titular y acentos; nunca texto sobre crema */
+  --mostaza:#f3c06a;        /* hover del botón ocre, chip de oferta (desde la home v5 el ocre la reemplaza) */
+  --ocre:#dea568;           /* botones sobre oscuro, contador del pedido, puntos de la barra, números de pasos */
+  --beige:#d8cbb6;          /* bordes y fondos suaves */
+  --tinta:#363b43;          /* texto, botones, barra superior, secciones oscuras */
+  --texto-suave:#4b515a;
+  --texto-chico:#5f6772;    /* la pizarra no llega a 4.5:1 sobre crema */
+  --fondo:#fbf8f3;          /* fondo general */
+  --crema:#f4ede2;          /* bandas y paneles */
+  --papel:#efe7da;          /* el fondo de una foto que todavía no cargó */
+  --borde:#e3d9c9;
+  --borde-campo:#c9bfae;
+  --madera-oscura:#9a6a35;  /* números grandes sobre crema */
+  --gris-claro:#e9e3d8;     /* texto sobre tinta */
+  --gris-borde:#8a919b;     /* bordes sobre tinta */
+  --blanco-puro:#ffffff;
+  --terracota:#b9654b;      /* «otra casa.» del titular de la home (texto grande) */
+  --borde-fino:#ece2d2;     /* los bordes de la tira de categorías */
+  --papel-ficha:#e3dacb;    /* el fondo de la foto de una ficha de la home */
+  --sombra:rgba(54,59,67,.12);
+  --sombra-foto:rgba(54,59,67,.16);   /* las fotos del collage */
+  --sombra-chip:rgba(54,59,67,.14);   /* el chip de precio del hero */
+  --sombra-ficha:rgba(54,59,67,.07);  /* las fichas de «Lo más elegido» */
+  --sombra-paso:rgba(54,59,67,.06);   /* las tarjetas de los pasos */
+  --sombra-fuerte:rgba(54,59,67,.25);
+
+  /* Ornamentos: los colores del sprite (templates/themes/sanpedro/sprite.svg).
+     Un contenedor los redefine para pasar a tono sobre tono o a silueta. */
+  --k0:var(--mostaza);
+  --k1:var(--coral);
+  --k3:var(--beige);
+  --k4:var(--pizarra);
+  --k5:var(--ocre);
+  --k6:#fdfdfd;
+  --tono-crema:#ebe0cf;     /* tono sobre tono en las bandas crema */
+  --tono-fondo:#f1e9dc;     /* tono sobre tono en el fondo general (el papel del hero) */
+  --tono-tinta:#3d434c;     /* siluetas en las secciones oscuras */
+
+  --f-titulo:Fraunces, Georgia, serif;
+  --f-texto:"Nunito Sans", "Helvetica Neue", Arial, sans-serif;
+
+  /* ── Alias del panel ──────────────────────────────────────────
+     El panel (templates/admin/) nació en la tienda de SENTIDA y usa estos
+     nombres. Apuntan a la paleta de San Pedro: no son colores nuevos. */
+  --blanco:var(--fondo);
+  --crema-suave:var(--fondo);
+  --marron:var(--tinta);
+  --marron-medio:var(--texto-chico);
+  --celeste:var(--crema);
+  --celeste-profundo:var(--pizarra);
+  --celeste-filete:var(--ocre);
+  --alerta:#9a3b22;          /* funcional: lo que pide acción ya. AA sobre fondo y crema */
+  --alerta-suave:#f6ddd2;    /* el fondo de lo que va en --alerta; nunca texto */
+  --linea:rgba(216,203,182,.7);
+  --sombra-suave:rgba(54,59,67,.08);
+  --velo:rgba(54,59,67,.45);
+  --display:var(--f-titulo);
+  --ui:var(--f-texto);
+}

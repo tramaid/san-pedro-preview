@@ -1,0 +1,183 @@
+/* San Pedro: lo que el sitio hace con JS. Todo es una mejora: sin JS, cada
+   cosa anda igual con formularios y links (los templates lo garantizan). */
+(function () {
+  'use strict';
+  // En la vista previa estática no hay servidor: el pedido, los filtros del
+  // catálogo y los formularios los maneja static/estatico.js.
+  var ESTATICO = document.body.hasAttribute('data-estatico');
+
+  var anuncio = document.getElementById('anuncio');
+  function avisar(texto) {
+    if (!anuncio) return;
+    anuncio.textContent = '';
+    setTimeout(function () { anuncio.textContent = texto; }, 50);
+  }
+  function pesos(n) { return '$' + Number(n).toLocaleString('es-AR'); }
+
+  /* ── El encabezado y la barra del pedido ─────────────────────────────── */
+  function actualizarPedido(unidades, total) {
+    document.querySelectorAll('.js-cart-count').forEach(function (b) {
+      b.textContent = unidades;
+      b.setAttribute('aria-label', unidades + (unidades === 1 ? ' producto' : ' productos'));
+    });
+    var barra = document.querySelector('.js-barra');
+    if (!barra) return;
+    barra.hidden = !unidades;
+    barra.querySelector('.js-barra-n').textContent = unidades;
+    barra.querySelector('.js-barra-u').textContent = unidades === 1 ? 'producto' : 'productos';
+    barra.querySelector('.js-barra-total').textContent = total;
+  }
+
+  /* ── Menú del celular: se cierra al elegir, con Escape o tocando afuera ─ */
+  var menu = document.querySelector('details.menu');
+  if (menu) {
+    menu.addEventListener('click', function (e) { if (e.target.closest('a')) menu.open = false; });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && menu.open) { menu.open = false; menu.querySelector('summary').focus(); }
+    });
+    document.addEventListener('click', function (e) { if (menu.open && !menu.contains(e.target)) menu.open = false; });
+  }
+
+  /* ── Agregar al pedido sin recargar (tarjetas y ficha) ───────────────── */
+  document.addEventListener('submit', function (e) {
+    var f = e.target;
+    if (ESTATICO || !f.matches || !f.matches('form[data-agregar]') || !window.fetch) return;
+    e.preventDefault();
+    var boton = f.querySelector('[type="submit"]');
+    if (boton) boton.disabled = true;
+    fetch(f.action, { method: 'POST', body: new FormData(f), headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (d) {
+        if (boton) boton.disabled = false;
+        if (!d.ok) { avisar(d.msg); alertaSuave(f, d.msg); return; }
+        actualizarPedido(d.unidades, d.total);
+        var card = f.closest('.card');
+        if (card) {
+          card.classList.add('en-pedido');
+          (boton.querySelector('.js-btn-txt') || boton).textContent = 'En tu pedido (' + d.en_pedido + ') · sumar';
+          boton.classList.add('agregado');
+          var sello = card.querySelector('.js-sello');
+          if (sello) { sello.hidden = false; sello.querySelector('.js-sello-n').textContent = d.en_pedido; }
+        }
+        var aviso = f.querySelector('[data-en-pedido]');
+        if (aviso) {
+          aviso.hidden = false;
+          var n = aviso.querySelector('[data-en-pedido-n]');
+          if (n) n.textContent = Number(n.textContent || 0) + Number((f.elements.cantidad || {}).value || 1);
+        }
+        avisar(d.msg + ' Tenés ' + d.unidades + (d.unidades === 1 ? ' producto' : ' productos') + ' en tu pedido.');
+      })
+      .catch(function () { HTMLFormElement.prototype.submit.call(f); });
+  });
+
+  function alertaSuave(f, texto) {
+    var p = f.querySelector('.js-error');
+    if (!p) { p = document.createElement('p'); p.className = 'aviso js-error'; p.setAttribute('role', 'alert'); f.appendChild(p); }
+    p.textContent = texto;
+  }
+
+  /* ── Ficha: cantidad − + y el precio en el botón ─────────────────────── */
+  document.querySelectorAll('form[data-ficha]').forEach(function (f) {
+    var cant = f.elements.cantidad, cta = f.querySelector('[data-cta]');
+    f.querySelectorAll('[data-cant]').forEach(function (b) {
+      b.hidden = false;
+      b.addEventListener('click', function () {
+        var v = Math.min(99, Math.max(1, (parseInt(cant.value, 10) || 1) + Number(b.dataset.cant)));
+        cant.value = v; pintar();
+      });
+    });
+    function pintar() {
+      if (!cta) return;
+      var elegida = f.querySelector('input[name="producto_id"]:checked') || f.querySelector('input[type="hidden"][name="producto_id"]');
+      var precio = elegida && elegida.dataset.precio ? Number(elegida.dataset.precio) / 100 : null;
+      var n = parseInt(cant.value, 10) || 1;
+      cta.textContent = 'Agregar al pedido' + (precio ? ' · ' + pesos(precio * n) : '');
+      if (elegida && elegida.type === 'radio') {
+        var p = document.querySelector('p[data-precio]');
+        if (p && precio) p.textContent = pesos(precio);
+      }
+    }
+    f.addEventListener('change', pintar);
+    cant.addEventListener('input', pintar);
+    pintar();
+  });
+
+  /* ── Ficha: las miniaturas cambian la foto grande sin recargar ───────── */
+  document.querySelectorAll('[data-galeria]').forEach(function (g) {
+    var grande = g.querySelector('[data-foto-grande]');
+    g.addEventListener('click', function (e) {
+      var a = e.target.closest('a[data-foto]');
+      if (!a || !grande) return;
+      e.preventDefault();
+      grande.src = a.dataset.foto;
+      grande.removeAttribute('srcset');
+      g.querySelectorAll('a[data-foto]').forEach(function (x) { x.removeAttribute('aria-current'); });
+      a.setAttribute('aria-current', 'true');
+    });
+  });
+
+  /* ── Catálogo: el orden se aplica al elegirlo ────────────────────────── */
+  if (!ESTATICO) document.querySelectorAll('select[data-autoenviar]').forEach(function (s) {
+    s.addEventListener('change', function () { s.form.submit(); });
+  });
+
+  /* ── Chips que filtran una grilla en el lugar (home, trabajos) ────────── */
+  document.querySelectorAll('[data-chips]').forEach(function (chips) {
+    var grilla = chips.closest('section').querySelector('[data-chips-grilla]');
+    if (!grilla) return;
+    chips.hidden = false;
+    chips.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-cat]');
+      if (!b) return;
+      chips.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      var cat = b.dataset.cat, n = 0;
+      Array.prototype.forEach.call(grilla.children, function (li) {
+        var ver = !cat || li.dataset.cat === cat;
+        li.hidden = !ver;
+        if (ver) n++;
+      });
+      avisar(n + (n === 1 ? ' resultado' : ' resultados'));
+    });
+  });
+
+  /* ── Revisión del pedido: − + y Quitar sin perder el scroll ni lo escrito ─ */
+  var lineas = document.querySelector('[data-lineas]');
+  if (lineas && window.fetch && window.DOMParser) {
+    document.addEventListener('submit', function (e) {
+      var f = e.target;
+      if (!f.matches || !f.matches('form[data-pedido-form]')) return;
+      e.preventDefault();
+      var b = e.submitter, datos = new FormData(f);
+      if (b && b.name) datos.append(b.name, b.value);
+      var foco = b && b.dataset.foco;
+      f.querySelectorAll('button').forEach(function (x) { x.disabled = true; });
+      fetch(f.action, { method: 'POST', body: datos })
+        .then(function (r) { if (!r.ok) throw 0; return r.text(); })
+        .then(function (html) {
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var nuevas = doc.querySelector('[data-lineas]');
+          if (!nuevas) {                      // quedó vacío: la página entera
+            var main = document.getElementById('contenido'), otro = doc.getElementById('contenido');
+            if (main && otro) main.innerHTML = otro.innerHTML;
+            actualizarPedido(0, pesos(0));
+            avisar('Tu pedido quedó vacío.');
+            return;
+          }
+          var actuales = document.querySelector('[data-lineas]');
+          actuales.replaceWith(nuevas);
+          var tot = document.querySelector('.tot'), totNuevo = doc.querySelector('.tot');
+          if (tot && totNuevo) tot.innerHTML = totNuevo.innerHTML;
+          var cuenta = doc.querySelector('.js-cart-count');
+          var n = cuenta ? parseInt(cuenta.textContent, 10) || 0 : 0;
+          actualizarPedido(n, totNuevo ? totNuevo.querySelector('b').textContent : '');
+          var mismo = foco && document.querySelector('[data-foco="' + foco + '"]');
+          (mismo || document.querySelector('[data-lineas] button, .resumen button')).focus();
+          avisar(totNuevo ? 'Total: ' + totNuevo.querySelector('b').textContent : 'Pedido actualizado');
+        })
+        .catch(function () {
+          if (b && b.name) { var c = document.createElement('input'); c.type = 'hidden'; c.name = b.name; c.value = b.value; f.appendChild(c); }
+          HTMLFormElement.prototype.submit.call(f);
+        });
+    });
+  }
+})();

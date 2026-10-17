@@ -1,0 +1,42 @@
+/* ============================================================
+   San Pedro · los ornamentos
+   Los dibujos salen del sprite (templates/themes/sanpedro/sprite.svg) y se
+   ponen con los macros de themes/sanpedro/_ornamentos.html. Los colores son
+   las variables --k0…--k6 de marca.css: estas clases solo las redefinen.
+   ============================================================ */
+.o-defs{position:absolute;width:0;height:0;overflow:hidden}
+.lienzo{position:relative}
+.ow{position:absolute;display:block;rotate:var(--r,0deg);scale:var(--sx,1) 1;pointer-events:none;z-index:1}
+.o{display:block;width:100%;height:auto;overflow:visible;transform-origin:50% 85%}
+.mini{display:inline-block;width:15px;height:15px;vertical-align:-2px}
+
+/* Brota y se mece: solo con .anim (lo pone base.html) y sin reduced-motion. */
+@keyframes brota{from{opacity:0;scale:.3;rotate:-24deg}}
+@keyframes mece{from{rotate:-2deg}to{rotate:2deg}}
+.anim .vivo .o{animation:brota .9s cubic-bezier(.2,.9,.25,1.2) both,mece calc(5s + var(--i) * .4s) ease-in-out infinite alternate;animation-delay:calc(var(--i) * 90ms + 250ms),calc(1.4s + var(--i) * 90ms)}
+
+/* Las capas: el mismo dibujo, otro color. */
+.tapiz,.papel,.siluetas{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+/* tono sobre tono sobre crema: un tono apenas más oscuro que el fondo */
+.tapiz{--k0:var(--tono-crema);--k1:var(--tono-crema);--k3:var(--tono-crema);--k4:var(--tono-crema);--k5:var(--tono-crema);--k6:var(--crema)}
+/* tono sobre tono sobre el fondo general (el papel del hero) */
+.papel{--k0:var(--tono-fondo);--k1:var(--tono-fondo);--k3:var(--tono-fondo);--k4:var(--tono-fondo);--k5:var(--tono-fondo);--k6:var(--fondo)}
+/* siluetas casi del color de una sección oscura */
+.siluetas{--k0:var(--tono-tinta);--k1:var(--tono-tinta);--k3:var(--tono-tinta);--k4:var(--tono-tinta);--k5:var(--tono-tinta);--k6:var(--tinta)}
+
+/* El sello con la cantidad en la tarjeta de un producto que ya está en el pedido. */
+.sello{position:absolute;right:10px;top:10px;width:58px;height:58px;display:grid;place-items:center;z-index:2;animation:pop .5s cubic-bezier(.2,.9,.25,1.5) both}
+.sello svg{position:absolute;inset:0;width:100%;height:100%;--k4:var(--tinta)}
+.sello b{position:relative;display:grid;place-items:center;min-width:22px;height:22px;border-radius:9999px;background:var(--fondo);color:var(--tinta);font-size:12px;font-weight:800}
+.sello[hidden]{display:none}
+@keyframes pop{from{scale:.2;rotate:-60deg;opacity:0}}
+
+@media (prefers-reduced-motion: reduce){
+  .anim .vivo .o,.sello{animation:none}
+}
+@media (max-width:760px){
+  .tapiz-contacto .ow{width:180px !important}
+}
+@media (max-width:560px){
+  .sello{width:46px;height:46px}
+}

@@ -1,0 +1,170 @@
+/* ============================================================
+   San Pedro · el home v5 (san-pedro-home-v5/codigo/home-v5.css, clases v-*).
+   La versión tierra: el ocre reemplaza a la mostaza y los ornamentos son
+   SVG a color (static/img/ornamentos/), los del logo sueltos y los ramos.
+   Colores: solo tokens (marca.css).
+   ============================================================ */
+
+/* ── ornamentos ─────────────────────────────────────────────── */
+/* Siempre detrás del contenido: la sección es relative + overflow hidden y
+   el contenido va en z-index 1. El contenedor tiene el giro fijo (style);
+   la imagen se mece desde --to, el punto que mira al borde donde se apoya. */
+.v-home .ow{position:absolute;display:block;pointer-events:none;user-select:none;z-index:0}
+.v-home .ow img{display:block;width:100%;height:auto;transform-origin:var(--to,50% 90%)}
+@keyframes mece-v5{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
+/* .anim (base.html) solo sin reduced-motion; .io (static/ornamentos.js) solo
+   si hay IntersectionObserver. Sin las dos, se ven quietos y enteros. */
+.anim .v-home .ow{transition:opacity .8s ease,transform 1.2s cubic-bezier(.2,.9,.25,1.15)}
+.io.anim .v-home .ow:not(.vis){opacity:0;transform:scale(.5) rotate(-14deg)}
+.anim .v-home .ow img{animation:mece-v5 5.5s ease-in-out var(--d,0s) infinite alternate}
+
+/* íconos */
+.v-home .acc{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.v-hero .eyebrow,.v-cats .eyebrow,.v-tienda .eyebrow,.v-cont .eyebrow{text-align:left;color:var(--tinta)}
+
+/* ── apertura ───────────────────────────────────────────────── */
+.v-hero{position:relative;overflow:hidden;padding:20px 0 56px}
+.v-hero-g{position:relative;z-index:1;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:center}
+.v-hero-t{grid-column:1/6;padding-left:56px}
+.v-hero-t h1{font-size:clamp(46px,5.4vw,80px);margin:16px 0 24px;line-height:1}
+.v-hero-t .acento{color:var(--terracota)}
+.v-hero-t .lead{margin:0 0 10px;font-size:18px;line-height:1.55;color:var(--texto-suave);max-width:32ch}
+.v-hero-t .acc{margin-top:28px}
+.v-col{grid-column:6/13;position:relative;height:520px}
+.fv{position:absolute;z-index:1;margin:0;border:5px solid var(--blanco-puro);border-radius:16px;overflow:hidden;background:var(--crema);box-shadow:0 14px 34px var(--sombra-foto)}
+.fv img{width:100%;height:100%;object-fit:cover}
+.fv-a{left:22%;top:0;width:56%;height:62%}
+.fv-b{left:16%;top:57%;width:34%;height:41%;z-index:2}
+.fv-c{left:62%;top:38%;width:33%;height:52%;z-index:2}
+.chip-p{position:absolute;z-index:3;left:8%;top:47%;display:inline-flex;flex-direction:column;gap:2px;padding:9px 16px;border-radius:12px;background:var(--blanco-puro);box-shadow:0 6px 18px var(--sombra-chip);font-size:14px;line-height:1.3;text-decoration:none}
+.chip-p b{font-family:var(--f-titulo);font-variation-settings:"SOFT" 100;font-size:17px;font-weight:600}
+.chip-p .cp{color:var(--texto-suave);font-weight:700}
+
+/* ── tira de categorías ─────────────────────────────────────── */
+.v-strip{background:var(--fondo);border-top:1px solid var(--borde-fino);border-bottom:1px solid var(--borde-fino)}
+.v-strip ul{display:flex;justify-content:space-between;gap:12px 20px;flex-wrap:nowrap;list-style:none;margin:0 auto;padding-top:18px;padding-bottom:18px}
+.v-strip li{flex:none}
+.v-strip a{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-size:16px;font-weight:700}
+.v-strip a:hover .st{text-decoration:underline;text-underline-offset:4px}
+.v-strip .ic{width:40px;height:40px;flex:none}
+
+/* ── categorías ─────────────────────────────────────────────── */
+.v-cats{position:relative;overflow:hidden;background:var(--fondo);padding:56px 0 72px}
+.v-cats .w{position:relative;z-index:1}
+.v-cats-h{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:36px}
+.v-cats-h h2{font-size:clamp(36px,3.8vw,54px);margin-top:10px}
+.v-circs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:24px;list-style:none;margin:0;padding:0}
+.circ{display:grid;gap:14px;justify-items:center;text-align:center;text-decoration:none}
+.circ-o{position:relative;display:block;width:100%}
+.circ-f{display:block;width:100%;aspect-ratio:1;border-radius:9999px;overflow:hidden;background:var(--crema);box-shadow:0 10px 24px var(--sombra)}
+.circ-f img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.circ:hover .circ-f img{transform:scale(1.06)}
+.circ-t{font-size:15px;font-weight:800;line-height:1.3}
+/* La ramita de cada categoría (aprobada antes de la v5): aparece al pasar el
+   mouse, creciendo y girando un poco, siempre en la misma posición. Es el
+   elemento del logo en la versión tierra. En celular no hay efecto. */
+.cat-ram{position:absolute;z-index:2;display:block;pointer-events:none}
+.cat-ram img{display:block;width:100%;height:auto;transform-origin:50% 85%;opacity:0;scale:.4;rotate:25deg;transition:opacity .3s ease,scale .5s cubic-bezier(.2,.9,.25,1.3),rotate .5s cubic-bezier(.2,.9,.25,1.3)}
+.circ:hover .cat-ram img,.circ:focus-visible .cat-ram img{opacity:1;scale:1.2;rotate:-12deg}
+
+/* ── lo más elegido ─────────────────────────────────────────── */
+.v-tienda{position:relative;overflow:hidden;background:var(--crema);padding:72px 0 80px}
+.v-tienda .w{position:relative;z-index:1}
+.v-tienda h2{font-size:clamp(40px,4.6vw,64px);margin:8px 0 22px}
+.v-tienda .chips-h{display:flex;flex-wrap:wrap;gap:10px;list-style:none;margin:0 0 28px;padding:0}
+.v-tienda .chips-h[hidden]{display:none}
+.v-tienda .chips-h button{min-height:40px;padding:6px 16px;border-radius:9999px;border:1px solid var(--beige);background:var(--fondo);font:700 14px var(--f-texto);color:var(--tinta);cursor:pointer}
+.v-tienda .chips-h button[aria-pressed="true"]{background:var(--tinta);border-color:var(--tinta);color:var(--blanco-puro)}
+.v-tienda .grilla{grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin-top:0}
+.v-tienda .card{gap:8px;height:auto;padding:10px 10px 14px;border-radius:14px;background:var(--fondo);box-shadow:0 8px 22px var(--sombra-ficha)}
+.v-tienda .card[hidden]{display:none}
+.v-tienda .card-abrir{gap:8px}
+.v-tienda .card-f{aspect-ratio:4/3;border-radius:8px;background:var(--papel-ficha);margin-bottom:6px}
+.v-tienda .card h3{margin:0 6px;font-family:var(--f-texto);font-variation-settings:normal;font-size:16px;font-weight:800;line-height:1.3}
+.v-tienda .precio{margin:0 6px 6px;font-size:18px}
+.v-tienda .card .sub{display:none}
+.v-tienda .card form,.v-tienda .card>.btn{margin:auto 6px 0}
+.v-tienda .card>.btn{width:calc(100% - 12px)}
+.v-tienda .card .btn{min-height:44px;gap:8px;font-size:14px;background:var(--blanco-puro);border-width:1px;border-color:var(--borde-campo);color:var(--tinta)}
+.v-tienda .card .btn:hover,.v-tienda .card .btn.agregado{background:var(--tinta);border-color:var(--tinta);color:var(--blanco-puro)}
+.v-tienda .ver-todo{display:flex;justify-content:center;margin-top:36px}
+
+/* ── cómo comprar ───────────────────────────────────────────── */
+.v-como{position:relative;overflow:hidden;background:var(--fondo);padding:64px 0 72px}
+.v-como .w{position:relative;z-index:1}
+.v-como-h{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:center;margin-bottom:36px}
+.v-como-h h2{grid-column:1/8;font-size:clamp(34px,3.6vw,50px);padding-left:56px}
+.v-como-h p{grid-column:8/13;margin:0;font-size:16px;line-height:1.6;color:var(--texto-suave);max-width:40ch}
+.v-pasos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;list-style:none;margin:0;padding:0 56px}
+.v-pasos li{position:relative;text-align:center;padding:30px 28px;border-radius:16px;background:var(--blanco-puro);box-shadow:0 8px 22px var(--sombra-paso)}
+.v-pasos .n{position:absolute;left:20px;top:20px;display:grid;place-items:center;width:44px;height:44px;border-radius:9999px;font-family:var(--f-titulo);font-size:20px;font-weight:700;color:var(--tinta)}
+.v-pasos .n1,.v-pasos .n2{background:var(--ocre)}
+.v-pasos .n3{background:var(--coral)}
+.v-pasos .pi{width:40px;height:40px;margin:0 auto 14px;display:block;color:var(--tinta)}
+.v-pasos h3{margin:0 0 8px;font-family:var(--f-titulo);font-variation-settings:"SOFT" 100;font-size:22px;font-weight:600}
+.v-pasos p{margin:0 auto;font-size:15px;line-height:1.55;color:var(--texto-suave);max-width:30ch}
+
+/* ── muebles ────────────────────────────────────────────────── */
+.v-mueb{position:relative;overflow:hidden;background:var(--tinta);color:var(--fondo)}
+.v-mueb a{color:var(--fondo)}
+.v-mueb a.btn-mos,.v-mueb a.btn-out-l:hover{color:var(--tinta)}
+.v-mueb-g{position:relative;z-index:1;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:center;padding-top:72px;padding-bottom:72px}
+.v-mueb-t{grid-column:1/7;padding-left:56px}
+.v-mueb-t .logo-m{width:170px;height:auto;margin-bottom:20px}
+.v-mueb-t h2{font-size:clamp(32px,3.5vw,48px);margin:0 0 18px;line-height:1.06}
+.v-mueb-t .acento-m{color:var(--ocre)}
+.v-mueb-t p{margin:0 0 28px;font-size:17px;line-height:1.6;color:var(--gris-claro);max-width:44ch}
+.v-mueb-v{grid-column:7/13;display:grid;grid-template-columns:1.25fr 1fr;gap:20px;padding-right:56px}
+.v-mueb-v figure{margin:0}
+.v-mueb-v img{width:100%;height:300px;object-fit:cover;border-radius:14px;display:block}
+.v-mueb-v figcaption{margin-top:12px;font-size:14px;color:var(--beige)}
+/* Sin trabajos publicados no hay fotos (CLAUDE.md): la columna la ocupa un
+   ramo de la familia tierra, para que no quede vacía. */
+.v-mueb-o{grid-column:7/13;position:relative;align-self:stretch;min-height:380px}
+
+/* ── contacto ───────────────────────────────────────────────── */
+.v-cont{position:relative;overflow:hidden;background:var(--crema)}
+.v-cont-g{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:64px;padding-bottom:64px}
+.v-cont .eyebrow{text-align:center}
+.v-cont h2{font-size:clamp(32px,3.4vw,46px);margin:10px 0 12px}
+.v-cont .sub{margin:0 0 28px;font-size:17px;line-height:1.55;color:var(--texto-suave)}
+.v-cont .acc{justify-content:center}
+
+@media (prefers-reduced-motion: reduce){
+  .circ-f img{transition:none}
+  .cat-ram img{transition:opacity .2s ease}
+}
+@media (hover:none),(max-width:640px){
+  .cat-ram{display:none}
+}
+@media (max-width:1040px){
+  .v-hero-t,.v-col{grid-column:1/13}
+  .v-hero-t{padding-left:0}
+  .v-col{margin-top:40px;height:min(96vw,540px)}
+  .v-strip ul{overflow-x:auto;justify-content:flex-start;gap:24px}
+  .v-circs{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .v-tienda .grilla{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .v-como-h h2,.v-como-h p{grid-column:1/13;padding-left:0}
+  .v-como-h p{margin-top:16px}
+  .v-pasos{padding:0}
+  .v-mueb-t,.v-mueb-v{grid-column:1/13}
+  .v-mueb-t{padding-left:0}
+  .v-mueb-v{margin-top:40px;padding-right:0}
+  .v-mueb-v img{height:auto;aspect-ratio:4/3.4}
+  .v-mueb-o{display:none}
+  .v-home .ow{opacity:.6}
+}
+@media (max-width:640px){
+  /* Se montan sobre los títulos: queda solo el del collage, más chico. */
+  .v-home section>.ow{display:none}
+  .v-como-h br,.v-mueb-t h2 br{display:none}
+  .v-col .ow{width:120px !important}
+  .v-cats-h{flex-direction:column;align-items:start}
+  .v-circs{gap:16px}
+  .v-pasos{grid-template-columns:minmax(0,1fr)}
+  .v-tienda .grilla{gap:14px}
+  .v-tienda .card h3{font-size:15px}
+  .v-tienda .card .btn{font-size:13px;padding:8px}
+  .v-tienda .card .btn svg{display:none}
+  .v-cont .acc .btn{white-space:normal}
+}
