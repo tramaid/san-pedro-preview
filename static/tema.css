@@ -25,18 +25,22 @@ html:has(.barra:not([hidden])){scroll-padding-bottom:120px}
 
 /* botones */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:14px 26px;border:2px solid transparent;border-radius:9999px;font:800 16px/1.15 var(--f-texto);text-decoration:none;text-align:center;cursor:pointer;transition:background-color .2s ease,color .2s ease,transform .2s ease}
-.btn:hover{transform:translateY(-1px)}
 .btn-ink{background:var(--tinta);color:var(--blanco-puro)}
-.btn-ink:hover{background:var(--pizarra);color:var(--blanco-puro)}
 /* home v5: el ocre reemplaza a la mostaza; la mostaza queda como hover */
 .btn-mos{background:var(--ocre);color:var(--tinta)}
-.btn-mos:hover{background:var(--mostaza);color:var(--tinta)}
 .btn-out{background:transparent;color:var(--tinta);border-color:var(--tinta)}
-.btn-out:hover{background:var(--tinta);color:var(--blanco-puro)}
 .btn-lino{background:var(--fondo);color:var(--tinta)}
-.btn-lino:hover{background:var(--mostaza);color:var(--tinta)}
 .btn-out-l{background:transparent;color:var(--fondo);border-color:var(--fondo)}
-.btn-out-l:hover{background:var(--fondo);color:var(--tinta)}
+/* el hover, solo con mouse: en el celular queda pegado después de tocar */
+@media (hover:hover){
+  .btn:hover{transform:translateY(-1px)}
+  .btn-ink:hover{background:var(--pizarra);color:var(--blanco-puro)}
+  .btn-mos:hover{background:var(--mostaza);color:var(--tinta)}
+  .btn-out:hover{background:var(--tinta);color:var(--blanco-puro)}
+  .btn-lino:hover{background:var(--mostaza);color:var(--tinta)}
+  .btn-out-l:hover{background:var(--fondo);color:var(--tinta)}
+  .pedido:hover{background:var(--pizarra);color:var(--blanco-puro)}
+}
 .btn[disabled],.btn[aria-disabled="true"]{background:var(--borde);color:var(--texto-chico);border-color:var(--borde);cursor:not-allowed;transform:none}
 .agregado{background:var(--tinta);color:var(--blanco-puro);border-color:var(--tinta)}
 
@@ -65,7 +69,6 @@ html:has(.barra:not([hidden])){scroll-padding-bottom:120px}
 .buscar input::placeholder{color:var(--texto-chico)}
 .buscar:focus-within{outline:3px solid var(--tinta);outline-offset:2px}
 .pedido{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:8px 16px;border-radius:9999px;background:var(--tinta);color:var(--blanco-puro);font-size:15px;font-weight:800;text-decoration:none}
-.pedido:hover{background:var(--pizarra);color:var(--blanco-puro)}
 .pedido b{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;border-radius:9999px;background:var(--ocre);color:var(--tinta);font-size:13px}
 
 /* menú del celular: un <details>, anda sin JS */
@@ -152,6 +155,12 @@ html:has(.barra:not([hidden])){scroll-padding-bottom:120px}
 .no-esta .acc{display:flex;flex-wrap:wrap;gap:12px}
 .error-campo{margin:4px 0 0;font-size:14px;font-weight:700;color:var(--alerta)}
 
+/* pantalla baja (zoom grande o celular acostado): la barra fija taparía un
+   tercio; queda al final de la página */
+@media (max-height:500px){
+  .barra{position:static;transform:none;margin:24px auto;width:max-content}
+  html:has(.barra:not([hidden])){scroll-padding-bottom:0}
+}
 @media (prefers-reduced-motion: reduce){.btn,.card-f img{transition:none}.btn:hover{transform:none}}
 @media (max-width:1040px){
   .w{padding-left:24px;padding-right:24px}

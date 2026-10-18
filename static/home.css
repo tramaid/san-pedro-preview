@@ -141,7 +141,7 @@
   .v-hero-t,.v-col{grid-column:1/13}
   .v-hero-t{padding-left:0}
   .v-col{margin-top:40px;height:min(96vw,540px)}
-  .v-strip ul{overflow-x:auto;justify-content:flex-start;gap:24px}
+  .v-strip ul{overflow-x:auto;justify-content:flex-start;gap:24px;scroll-padding-inline:16px}
   .v-circs{grid-template-columns:repeat(3,minmax(0,1fr))}
   .v-tienda .grilla{grid-template-columns:repeat(2,minmax(0,1fr))}
   .v-como-h h2,.v-como-h p{grid-column:1/13;padding-left:0}

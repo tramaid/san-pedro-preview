@@ -38,17 +38,27 @@
     document.addEventListener('click', function (e) { if (menu.open && !menu.contains(e.target)) menu.open = false; });
   }
 
+  /* ── Tiras que scrollean de costado (celular): lo que toma el foco entra
+     entero, con su anillo; Chrome no mueve lo que ya se ve en parte. ──── */
+  document.addEventListener('focusin', function (e) {
+    var t = e.target;
+    if (t.closest && t.closest('.v-strip ul, .chips, .chips-h')) t.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  });
+
   /* ── Agregar al pedido sin recargar (tarjetas y ficha) ───────────────── */
   document.addEventListener('submit', function (e) {
     var f = e.target;
     if (ESTATICO || !f.matches || !f.matches('form[data-agregar]') || !window.fetch) return;
     e.preventDefault();
     var boton = f.querySelector('[type="submit"]');
+    // Deshabilitarlo le saca el foco: al volver se lo devolvemos, así el
+    // teclado y el lector siguen donde estaban.
+    var tenia = boton && document.activeElement === boton;
     if (boton) boton.disabled = true;
     fetch(f.action, { method: 'POST', body: new FormData(f), headers: { 'X-Requested-With': 'XMLHttpRequest' } })
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (d) {
-        if (boton) boton.disabled = false;
+        if (boton) { boton.disabled = false; if (tenia) boton.focus(); }
         if (!d.ok) { avisar(d.msg); alertaSuave(f, d.msg); return; }
         actualizarPedido(d.unidades, d.total);
         var card = f.closest('.card');
