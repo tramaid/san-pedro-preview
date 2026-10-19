@@ -138,6 +138,8 @@
   .v-mueb-v img{height:auto;aspect-ratio:4/3.4}
   .v-mueb-o{display:none}
   .v-home .ow{opacity:.6}
+  /* el ramo de categorías se montaría sobre el título en dos renglones */
+  .v-cats>.ow{display:none}
 }
 @media (max-width:640px){
   /* Se montan sobre los títulos: queda solo el del collage, más chico. */
