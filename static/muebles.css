@@ -29,7 +29,6 @@
 .acc{display:flex;flex-wrap:wrap;gap:12px}
 .hechos{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:10px 28px;margin:0;padding:20px 0 0;border-top:1px solid var(--gris-borde);list-style:none;font-size:15px;font-weight:700;color:var(--gris-claro)}
 .hechos li::before{content:"";display:inline-block;width:8px;height:8px;margin-right:10px;border-radius:9999px;background:var(--ocre);vertical-align:1px}
-.hechos .falta{color:var(--ocre)}
 
 .madera{position:relative;overflow:hidden;background:var(--papel)}
 .madera-f{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -160,11 +159,6 @@ html:not(.js) .ultimo{grid-template-columns:minmax(0,1fr)}
 .aviso-f{display:flex;gap:12px;align-items:flex-start;margin:0;padding:16px 18px;border-radius:14px;border:1px dashed var(--texto-chico);font-size:15px;color:var(--texto-suave)}
 .aviso-f[hidden]{display:none}
 .aviso-f svg{flex:none;margin-top:2px}
-/* la vista previa: el mensaje tal cual llega */
-.vista{display:none;padding:20px;border-radius:24px;background:var(--tinta)}
-.js .vista{display:block}
-.vista-t{margin:0 0 12px;font-size:15px;font-weight:800;color:var(--fondo)}
-.burbuja{max-height:440px;overflow:auto;padding:14px 16px;border-radius:16px 16px 16px 4px;background:var(--blanco-puro);font-size:15px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
 .nav-asis{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:32px;padding-top:24px;border-top:1px solid var(--borde)}
 .nav-asis .btn{min-width:150px}
 .nav-asis .btn svg{width:20px;height:20px}
@@ -232,8 +226,7 @@ html:not(.js) .ultimo{grid-template-columns:minmax(0,1fr)}
   .in{padding-right:10px}
   .in input{padding:10px}
   .ultimo{grid-template-columns:minmax(0,1fr)}
-  .prog li{font-size:0;gap:0}
-  .prog li[aria-current="step"]{font-size:12px;gap:8px;white-space:nowrap}
+  .prog li{font-size:11px;gap:6px;line-height:1.2}
   .asis{padding:28px 18px;border-radius:24px}
   .nav-asis .btn{min-width:0}
   .trab,.cont{padding-top:80px}

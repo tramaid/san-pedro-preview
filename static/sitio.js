@@ -122,6 +122,23 @@
     f.addEventListener('change', pintar);
     cant.addEventListener('input', pintar);
     pintar();
+
+    // Sin medida elegida, el aviso del template (con la voz del sitio) en
+    // vez de la burbuja del navegador. Sin JS queda la del `required`.
+    var falta = f.querySelector('[data-falta-medida]');
+    if (falta) {
+      f.addEventListener('invalid', function (e) {
+        if (e.target.name !== 'producto_id') return;
+        e.preventDefault();
+        if (!falta.hidden) return;              // un aviso por intento, no uno por radio
+        falta.hidden = false;
+        avisar(falta.textContent);
+        var primera = f.querySelector('input[name="producto_id"]:not(:disabled)');
+        if (primera) primera.focus();
+      }, true);
+      f.addEventListener('change', function (e) { if (e.target.name === 'producto_id') falta.hidden = true; });
+      f.querySelector('[type="submit"]').addEventListener('click', function () { falta.hidden = true; });
+    }
   });
 
   /* ── Ficha: las miniaturas cambian la foto grande sin recargar ───────── */
@@ -174,6 +191,33 @@
     });
   });
 
+  /* ── Revisión del pedido: la vista previa del mensaje de WhatsApp. Repite
+     servicios/avisos._texto_cliente: el saludo, cada línea y el total los
+     escribe el servidor (data-saludo, data-msg, data-total); acá se suman lo
+     elegido en cada línea y los datos, a medida que se escriben. En la vista
+     previa estática la arma static/estatico.js. ───────────────────────── */
+  function pintarVista() {
+    var v = document.querySelector('[data-vista-pedido]'), f = document.getElementById('f-pedido');
+    if (ESTATICO || !v || !f) return;
+    var l = [v.dataset.saludo + ':'];
+    document.querySelectorAll('[data-lineas] > li[data-msg]').forEach(function (li) {
+      l.push(li.dataset.msg);
+      var d = li.querySelector('input[data-detalle]'), t = d ? d.value.replace(/\s+/g, ' ').trim().slice(0, 100) : '';
+      if (t) l.push('   ' + v.dataset.detalle + ': ' + t);
+    });
+    l.push('Total: ' + v.dataset.total);
+    var extra = [], x = f.elements;
+    if (x.nombre.value.trim()) extra.push('Nombre: ' + x.nombre.value.trim());
+    if (x.localidad.value.trim()) extra.push('Envío a: ' + x.localidad.value.trim());
+    if (x.observaciones.value.trim()) extra.push('Comentarios: ' + x.observaciones.value.trim());
+    if (extra.length) l = l.concat([''], extra);
+    v.querySelector('[data-mensaje]').textContent = l.join('\n');
+  }
+  document.addEventListener('input', function (e) {
+    if (e.target.form && e.target.form.id === 'f-pedido') pintarVista();
+  });
+  pintarVista();
+
   /* ── Revisión del pedido: − + y Quitar sin perder el scroll ni lo escrito ─ */
   var lineas = document.querySelector('[data-lineas]');
   if (lineas && window.fetch && window.DOMParser) {
@@ -206,6 +250,9 @@
           actuales.replaceWith(nuevas);
           var tot = document.querySelector('.tot'), totNuevo = doc.querySelector('.tot');
           if (tot && totNuevo) tot.innerHTML = totNuevo.innerHTML;
+          var vista = document.querySelector('[data-vista-pedido]'), vistaNueva = doc.querySelector('[data-vista-pedido]');
+          if (vista && vistaNueva) vista.dataset.total = vistaNueva.dataset.total;
+          pintarVista();
           var cuenta = doc.querySelector('.js-cart-count');
           var n = cuenta ? parseInt(cuenta.textContent, 10) || 0 : 0;
           actualizarPedido(n, totNuevo ? totNuevo.querySelector('b').textContent : '');

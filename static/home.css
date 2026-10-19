@@ -39,6 +39,7 @@
 .chip-p{position:absolute;z-index:3;left:8%;top:47%;display:inline-flex;flex-direction:column;gap:2px;padding:9px 16px;border-radius:12px;background:var(--blanco-puro);box-shadow:0 6px 18px var(--sombra-chip);font-size:14px;line-height:1.3;text-decoration:none}
 .chip-p b{font-family:var(--f-titulo);font-variation-settings:"SOFT" 100;font-size:17px;font-weight:600}
 .chip-p .cp{color:var(--texto-suave);font-weight:700}
+.chip-p s{margin-left:4px;font-weight:600;color:var(--texto-chico)}
 
 /* ── tira de categorías ─────────────────────────────────────── */
 .v-strip{background:var(--fondo);border-top:1px solid var(--borde-fino);border-bottom:1px solid var(--borde-fino)}
@@ -67,26 +68,11 @@
 .cat-ram img{display:block;width:100%;height:auto;transform-origin:50% 85%;opacity:0;scale:.4;rotate:25deg;transition:opacity .3s ease,scale .5s cubic-bezier(.2,.9,.25,1.3),rotate .5s cubic-bezier(.2,.9,.25,1.3)}
 .circ:hover .cat-ram img,.circ:focus-visible .cat-ram img{opacity:1;scale:1.2;rotate:-12deg}
 
-/* ── lo más elegido ─────────────────────────────────────────── */
+/* ── destacados ─────────────────────────────────────────── */
 .v-tienda{position:relative;overflow:hidden;background:var(--crema);padding:72px 0 80px}
 .v-tienda .w{position:relative;z-index:1}
-.v-tienda h2{font-size:clamp(40px,4.6vw,64px);margin:8px 0 22px}
-.v-tienda .chips-h{display:flex;flex-wrap:wrap;gap:10px;list-style:none;margin:0 0 28px;padding:0}
-.v-tienda .chips-h[hidden]{display:none}
-.v-tienda .chips-h button{min-height:40px;padding:6px 16px;border-radius:9999px;border:1px solid var(--beige);background:var(--fondo);font:700 14px var(--f-texto);color:var(--tinta);cursor:pointer}
-.v-tienda .chips-h button[aria-pressed="true"]{background:var(--tinta);border-color:var(--tinta);color:var(--blanco-puro)}
-.v-tienda .grilla{grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin-top:0}
-.v-tienda .card{gap:8px;height:auto;padding:10px 10px 14px;border-radius:14px;background:var(--fondo);box-shadow:0 8px 22px var(--sombra-ficha)}
-.v-tienda .card[hidden]{display:none}
-.v-tienda .card-abrir{gap:8px}
-.v-tienda .card-f{aspect-ratio:4/3;border-radius:8px;background:var(--papel-ficha);margin-bottom:6px}
-.v-tienda .card h3{margin:0 6px;font-family:var(--f-texto);font-variation-settings:normal;font-size:16px;font-weight:800;line-height:1.3}
-.v-tienda .precio{margin:0 6px 6px;font-size:18px}
-.v-tienda .card .sub{display:none}
-.v-tienda .card form,.v-tienda .card>.btn{margin:auto 6px 0}
-.v-tienda .card>.btn{width:calc(100% - 12px)}
-.v-tienda .card .btn{min-height:44px;gap:8px;font-size:14px;background:var(--blanco-puro);border-width:1px;border-color:var(--borde-campo);color:var(--tinta)}
-.v-tienda .card .btn:hover,.v-tienda .card .btn.agregado{background:var(--tinta);border-color:var(--tinta);color:var(--blanco-puro)}
+.v-tienda h2{font-size:clamp(40px,4.6vw,64px);margin:8px 0 32px}
+.v-tienda .grilla{margin-top:0}
 .v-tienda .ver-todo{display:flex;justify-content:center;margin-top:36px}
 
 /* ── cómo comprar ───────────────────────────────────────────── */
@@ -143,7 +129,6 @@
   .v-col{margin-top:40px;height:min(96vw,540px)}
   .v-strip ul{overflow-x:auto;justify-content:flex-start;gap:24px;scroll-padding-inline:16px}
   .v-circs{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .v-tienda .grilla{grid-template-columns:repeat(2,minmax(0,1fr))}
   .v-como-h h2,.v-como-h p{grid-column:1/13;padding-left:0}
   .v-como-h p{margin-top:16px}
   .v-pasos{padding:0}
@@ -159,12 +144,15 @@
   .v-home section>.ow{display:none}
   .v-como-h br,.v-mueb-t h2 br{display:none}
   .v-col .ow{width:120px !important}
+  /* Que el collage asome en la primera pantalla: la bajada del WhatsApp ya
+     la dice la barra superior y los dos botones van en una fila. */
+  .v-hero-t h1{margin:12px 0 18px}
+  .v-hero-t .lead-wa{display:none}
+  .v-hero-t .acc{margin-top:22px;gap:10px}
+  .v-hero-t .acc .btn{min-height:46px;padding:12px 18px;font-size:15px}
+  .v-col{margin-top:28px}
   .v-cats-h{flex-direction:column;align-items:start}
   .v-circs{gap:16px}
   .v-pasos{grid-template-columns:minmax(0,1fr)}
-  .v-tienda .grilla{gap:14px}
-  .v-tienda .card h3{font-size:15px}
-  .v-tienda .card .btn{font-size:13px;padding:8px}
-  .v-tienda .card .btn svg{display:none}
   .v-cont .acc .btn{white-space:normal}
 }

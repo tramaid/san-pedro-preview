@@ -90,20 +90,7 @@
 
     if (f.matches('form[data-enviar-estatico]')) {
       e.preventDefault();
-      var pedido = leer(), lineas = ['Hola San Pedro, quiero hacer este pedido:'];
-      Object.keys(pedido).forEach(function (k) {
-        var p = PRODUCTOS[k];
-        lineas.push('- ' + pedido[k] + ' x ' + p.n + (p.e ? ' (' + p.e + ')' : '') + ' — ' + pesos(p.p * pedido[k]));
-        var det = (elegido[k] || '').replace(/\s+/g, ' ').trim().slice(0, 100);
-        if (det) lineas.push('   ' + NOMBRE_DETALLE + ': ' + det);
-      });
-      lineas.push('Total: ' + pesos(resumen(pedido).total));
-      var extra = [], d = f.elements;
-      if (d.nombre.value.trim()) extra.push('Nombre: ' + d.nombre.value.trim());
-      if (d.localidad.value.trim()) extra.push('Envío a: ' + d.localidad.value.trim());
-      if (d.observaciones.value.trim()) extra.push('Comentarios: ' + d.observaciones.value.trim());
-      if (extra.length) lineas = lineas.concat([''], extra);
-      window.open(wa(WA_DECO, lineas.join('\n')), '_blank', 'noopener');
+      window.open(wa(WA_DECO, mensajePedido(f)), '_blank', 'noopener');
       return;
     }
 
@@ -159,6 +146,32 @@
   // que sobreviva a los − + que redibujan la lista.
   var molde = document.querySelector('template[data-elegir-estatico]'), elegido = {};
   var NOMBRE_DETALLE = molde ? molde.content.querySelector('span').firstChild.textContent.trim() : '';
+  /* El mismo texto que servicios/avisos._texto_cliente, sin número de pedido. */
+  function mensajePedido(f) {
+    var pedido = leer(), lineas = ['Hola San Pedro, quiero hacer este pedido:'];
+    Object.keys(pedido).forEach(function (k) {
+      var p = PRODUCTOS[k];
+      lineas.push('- ' + pedido[k] + ' x ' + p.n + (p.e ? ' (' + p.e + ')' : '') + ' — ' + pesos(p.p * pedido[k]));
+      var det = (elegido[k] || '').replace(/\s+/g, ' ').trim().slice(0, 100);
+      if (det) lineas.push('   ' + NOMBRE_DETALLE + ': ' + det);
+    });
+    lineas.push('Total: ' + pesos(resumen(pedido).total));
+    var extra = [], d = f.elements;
+    if (d.nombre.value.trim()) extra.push('Nombre: ' + d.nombre.value.trim());
+    if (d.localidad.value.trim()) extra.push('Envío a: ' + d.localidad.value.trim());
+    if (d.observaciones.value.trim()) extra.push('Comentarios: ' + d.observaciones.value.trim());
+    if (extra.length) lineas = lineas.concat([''], extra);
+    return lineas.join('\n');
+  }
+  // La vista previa del mensaje, arriba del botón: se repinta con cada cambio.
+  function pintarVista() {
+    var v = document.querySelector('[data-vista-pedido] [data-mensaje]'), f = document.getElementById('f-pedido');
+    if (v && f) v.textContent = mensajePedido(f);
+  }
+  document.addEventListener('input', function (e) {
+    if (e.target.form && e.target.form.id === 'f-pedido') pintarVista();
+  });
+
   function pintarPedido() {
     var c = pintarEncabezado(), r = resumen(c);
     if (!lista) return;
@@ -201,6 +214,7 @@
     });
     document.querySelector('[data-tot-n]').textContent = r.unidades + (r.unidades === 1 ? ' producto' : ' productos');
     document.querySelector('[data-tot-total]').textContent = pesos(r.total);
+    pintarVista();
   }
   if (lista) {
     lista.addEventListener('click', function (e) {

@@ -11,9 +11,9 @@
 <link rel="preload" href="/san-pedro-preview/static/fuentes/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/san-pedro-preview/static/fuentes/nunito-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/san-pedro-preview/static/marca.css?v=1792204453">
-<link rel="stylesheet" href="/san-pedro-preview/static/tema.css?v=1792212516">
+<link rel="stylesheet" href="/san-pedro-preview/static/tema.css?v=1792393363">
 <link rel="stylesheet" href="/san-pedro-preview/static/ornamentos.css?v=1792197828">
-<link rel="stylesheet" href="/san-pedro-preview/static/tienda.css?v=1792212516">
+<link rel="stylesheet" href="/san-pedro-preview/static/tienda.css?v=1792393363">
 <script>
   /* .js: hay JS (lo que se oculta o se arma con JS). .anim: el movimiento
      de los ornamentos, solo sin reduced-motion. */
@@ -69,7 +69,31 @@
 288 212 340 10 11 47 54 83 95 87 101 109 121 223 207 264 201 514 316 827
 382 194 41 537 44 724 6z"/></g></svg>
     </form>
-    <a class="pedido" href="/san-pedro-preview/pedido"><span>Tu pedido</span> <b class="js-cart-count" aria-label="0 productos">0</b></a>
+    <a class="pedido" href="/san-pedro-preview/pedido"><svg class="i pedido-ic" viewBox="-17.2 -86.2 679.3 679.3" fill="currentColor" aria-hidden="true" focusable="false"><g transform="translate(0.000000,507.000000) scale(0.100000,-0.100000)"><path d="M335 4985 c-5 -2 -35 -10 -65 -19 -182 -50 -249 -288 -123 -431 90
+-101 112 -105 582 -105 378 0 392 -1 411 -20 11 -11 20 -28 20 -37 0 -9 4 -30
+9 -47 5 -17 14 -50 20 -73 20 -78 31 -123 40 -160 16 -67 32 -127 51 -193 10
+-36 23 -83 28 -105 41 -164 52 -205 63 -241 5 -17 9 -41 9 -53 0 -13 9 -51 19
+-85 11 -33 24 -80 30 -103 6 -24 16 -62 22 -85 6 -24 15 -57 20 -74 5 -17 9
+-41 9 -53 0 -13 9 -51 19 -85 19 -58 30 -99 53 -191 5 -22 14 -54 19 -71 5
+-17 9 -41 9 -54 0 -13 4 -37 9 -54 10 -31 23 -82 43 -161 5 -22 18 -68 29
+-101 10 -34 19 -72 19 -85 0 -12 4 -36 9 -53 9 -30 20 -71 40 -153 5 -21 14
+-57 20 -80 6 -24 16 -62 22 -85 11 -44 43 -158 60 -214 5 -17 9 -41 9 -55 0
+-13 8 -44 17 -69 9 -25 20 -65 24 -90 31 -176 78 -255 175 -296 44 -18 166
+-18 207 0 97 44 174 180 149 264 -6 20 -13 51 -16 67 -3 17 -10 52 -17 79 -22
+83 -167 76 1574 76 1392 0 1555 2 1604 16 63 18 125 69 153 125 21 40 169 473
+350 1019 21 63 43 130 49 148 6 17 16 46 21 62 6 17 14 42 19 58 67 197 191
+585 191 597 0 9 9 33 20 55 45 89 13 209 -71 266 -63 42 -124 48 -459 46 -151
+-1 -1120 -4 -2153 -7 l-1878 -5 -24 24 c-13 13 -27 37 -30 53 -3 15 -10 42
+-15 59 -6 17 -10 41 -10 55 0 13 -8 44 -17 69 -9 25 -20 65 -24 90 -4 25 -13
+64 -18 88 -6 23 -16 61 -22 85 -5 23 -14 62 -19 87 -30 167 -101 251 -249 296
+-42 13 -1001 21 -1036 9z"/><path d="M2480 1100 c-14 -4 -38 -8 -53 -9 -51 -2 -133 -31 -196 -69 -160 -96
+-244 -249 -244 -442 0 -146 41 -247 141 -346 123 -121 227 -164 397 -164 l112
+0 109 54 c70 34 123 68 149 94 119 123 181 316 146 450 -6 23 -15 60 -20 82
+-32 148 -243 321 -416 341 -38 4 -77 10 -85 12 -8 3 -26 1 -40 -3z"/><path d="M4960 1100 c-14 -4 -40 -8 -58 -9 -18 -1 -54 -10 -80 -20 -26 -10
+-60 -24 -77 -30 -97 -37 -215 -179 -250 -299 -9 -31 -20 -71 -26 -88 -5 -17
+-9 -50 -9 -74 0 -24 4 -57 9 -74 6 -17 17 -56 26 -87 41 -144 190 -285 354
+-335 77 -23 223 -18 315 11 455 144 499 732 71 948 -58 29 -99 42 -150 48 -38
+4 -77 10 -85 12 -8 3 -26 1 -40 -3z"/></g></svg><span>Tu pedido</span> <b class="js-cart-count" aria-label="0 productos">0</b></a>
     <details class="menu">
       <summary>Menú</summary>
       <div class="menu-panel">
@@ -143,7 +167,7 @@
 
       
       <form method="post" action="/san-pedro-preview/carrito/agregar" data-agregar data-ficha>
-        <input type="hidden" name="_csrf" value="e2ac70a1469fff638042c1200d35f66b4c3ea5d9c23cde1096335fdeb52cc9b8">
+        <input type="hidden" name="_csrf" value="cbb4aa8211d759830ba133a9eefe53b55069bed383a716917b1688fd19e41cc7">
         
         <input type="hidden" name="producto_id" value="70" data-precio="7500000">
         
@@ -158,12 +182,11 @@
         <p class="aviso" role="status" data-en-pedido hidden>Ya tenés <span data-en-pedido-n>0</span> en tu pedido. <a href="/san-pedro-preview/pedido">Ver mi pedido</a></p>
       </form>
       
-
       <div class="consulta"><a href="https://wa.me/5491161231694?text=Hola%20San%20Pedro%2C%20quiero%20consultar%20por%3A%20Juego%20de%20almohadones%20y%20pie%20de%20cama%20wafle" target="_blank" rel="noopener">Consultar colores o stock por WhatsApp</a></div>
 
       <div class="mayor-mini">
         <p><b>¿Comprás por cantidad?</b> Tenemos precio mayorista.</p>
-        <a href="https://wa.me/5491161231694?text=Hola%20San%20Pedro%2C%20quiero%20consultar%20el%20precio%20mayorista%20de%3A%20Juego%20de%20almohadones%20y%20pie%20de%20cama%20wafle" target="_blank" rel="noopener">Consultar precio</a>
+        <a href="https://wa.me/5491161231694?text=Hola%20San%20Pedro%2C%20quiero%20consultar%20el%20precio%20mayorista%20de%3A%20Juego%20de%20almohadones%20y%20pie%20de%20cama%20wafle" target="_blank" rel="noopener">Consultar precio mayorista</a>
       </div>
 
       
@@ -222,7 +245,7 @@
   </a>
   <p class="precio">$28.000</p>
   <form method="post" action="/san-pedro-preview/carrito/agregar" data-agregar>
-    <input type="hidden" name="_csrf" value="e2ac70a1469fff638042c1200d35f66b4c3ea5d9c23cde1096335fdeb52cc9b8">
+    <input type="hidden" name="_csrf" value="cbb4aa8211d759830ba133a9eefe53b55069bed383a716917b1688fd19e41cc7">
     <input type="hidden" name="producto_id" value="45">
     <input type="hidden" name="cantidad" value="1">
     <button class="btn btn-out" type="submit"><span class="js-btn-txt">Agregar al pedido</span><span class="sr"> (Manta rústica)</span></button>
@@ -261,8 +284,8 @@
 <div class="sr" aria-live="polite" id="anuncio"></div>
 
 <script src="/san-pedro-preview/static/catalogo.js" defer></script>
-<script src="/san-pedro-preview/static/estatico.js?v=1792208854" defer></script>
-<script src="/san-pedro-preview/static/sitio.js?v=1792212516" defer></script>
+<script src="/san-pedro-preview/static/estatico.js?v=1792392209" defer></script>
+<script src="/san-pedro-preview/static/sitio.js?v=1792392208" defer></script>
 
 </body>
 </html>
