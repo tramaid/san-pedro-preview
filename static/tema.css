@@ -57,8 +57,20 @@ html:has(.barra:not([hidden])){scroll-padding-bottom:120px}
 .top span{display:inline-flex;align-items:center;gap:12px}
 .top .top-pt{display:inline-block;flex:none;width:7px;height:7px;border-radius:9999px;background:var(--ocre)}
 
-/* encabezado */
-.hdr{display:flex;align-items:center;justify-content:space-between;gap:28px;padding-top:18px;padding-bottom:18px}
+/* encabezado: siempre a la vista. --hdr-h es su alto y --hdr-c el de la
+   franja que queda pegada arriba al bajar; --logo-s, cuánto se achica el logo
+   para entrar en ella. Todo con transform: el alto no cambia y la página no
+   salta (static/sitio.js pone .fijo y .compacto). */
+:root{--hdr-h:164px;--hdr-c:84px;--logo-s:.5}
+html{scroll-padding-top:calc(var(--hdr-c) + 16px)}
+.hdr-f{position:relative;z-index:35;background:var(--fondo)}
+.hdr-f.fijo{position:sticky;top:calc(var(--hdr-c) - var(--hdr-h))}
+.hdr-f.compacto{box-shadow:0 1px 0 var(--borde),0 12px 24px -20px var(--sombra-fuerte)}
+.hdr-f .logo,.hdr-f .hdr>nav,.hdr-f .hdr-der{transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.hdr-f .logo{transform-origin:left center}
+.hdr-f.compacto .logo{transform:translateY(calc((var(--hdr-h) - var(--hdr-c)) / 2)) scale(var(--logo-s))}
+.hdr-f.compacto .hdr>nav,.hdr-f.compacto .hdr-der{transform:translateY(calc((var(--hdr-h) - var(--hdr-c)) / 2))}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:28px;height:var(--hdr-h)}
 .logo{display:block;width:158px;flex:none}
 .logo img{width:100%;height:auto}
 .nav{display:flex;gap:28px;list-style:none;margin:0;padding:0}
@@ -179,7 +191,7 @@ html:has(.barra:not([hidden])){scroll-padding-bottom:120px}
   .barra{position:static;transform:none;margin:24px auto;width:max-content}
   html:has(.barra:not([hidden])){scroll-padding-bottom:0}
 }
-@media (prefers-reduced-motion: reduce){.btn,.card-f img{transition:none}.btn:hover{transform:none}}
+@media (prefers-reduced-motion: reduce){.btn,.card-f img,.hdr-f .logo,.hdr-f .hdr>nav,.hdr-f .hdr-der{transition:none}.btn:hover{transform:none}}
 @media (max-width:820px){.arr{grid-template-columns:1fr}}
 @media (max-width:1040px){
   .w{padding-left:24px;padding-right:24px}
@@ -192,6 +204,7 @@ html:has(.barra:not([hidden])){scroll-padding-bottom:120px}
   .grilla{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 14px}
 }
 @media (max-width:560px){
+  :root{--hdr-h:128px;--hdr-c:72px;--logo-s:.56}
   .w{padding-left:16px;padding-right:16px}
   .hdr{gap:12px}
   .hdr-der{gap:8px}

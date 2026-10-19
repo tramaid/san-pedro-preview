@@ -9,6 +9,7 @@
 .m-pag .top b{color:var(--ocre)}
 
 /* encabezado con la marca de Muebles */
+.m-pag{--hdr-h:116px;--hdr-c:76px;--logo-s:.72}
 .m-pag .logo-m{width:170px}
 .a-tienda{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:14px;font-weight:700;color:var(--texto-chico);text-decoration:none;white-space:nowrap}
 .a-tienda img{width:26px;height:auto}
@@ -248,6 +249,7 @@ html:not(.js) .ultimo{grid-template-columns:minmax(0,1fr)}
   .m-pag .top .top-pt{display:none}
   .filtro{display:grid;grid-template-columns:auto 1fr auto}
   .filtro button{padding:8px 14px;font-size:14px}
+  .m-pag{--hdr-h:92px;--hdr-c:68px;--logo-s:.8}
   .m-pag .logo-m{width:118px}
   .m-pag .hdr-der>.btn{display:none}
   .hierro{padding:40px 16px 28px}

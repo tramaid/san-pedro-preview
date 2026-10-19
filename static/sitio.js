@@ -28,6 +28,20 @@
     barra.querySelector('.js-barra-total').textContent = total;
   }
 
+  /* ── El encabezado a la vista: se pega arriba y, al bajar, se achica a su
+     franja de abajo (tema.css). Sin JS se va con el scroll. ─────────────── */
+  var hdrF = document.querySelector('.hdr-f');
+  if (hdrF) {
+    var compacto = null;
+    var mirar = function () {
+      var c = window.scrollY > 8;
+      if (c !== compacto) { compacto = c; hdrF.classList.toggle('compacto', c); }
+    };
+    hdrF.classList.add('fijo');
+    window.addEventListener('scroll', mirar, { passive: true });
+    mirar();
+  }
+
   /* ── Menú del celular: se cierra al elegir, con Escape o tocando afuera ─ */
   var menu = document.querySelector('details.menu');
   if (menu) {
