@@ -248,11 +248,19 @@
     var hidden = form.querySelector('input[name="cat"]');
     if (hidden) hidden.remove();
 
+    // Como models/catalogo._coincide: primero lo que responde por sí mismo
+    // (nombre, bajada, medidas); la categoría, solo si nada responde.
+    function responde(t, palabras, conCat) {
+      var texto = norm(t.dataset.buscar + (conCat ? ' ' + t.dataset.buscarCat : ''));
+      return palabras.every(function (p) { return texto.indexOf(p) >= 0; });
+    }
     function aplicar() {
       var palabras = norm(q.value).split(/\s+/).filter(Boolean), n = 0;
+      var deCat = tarjetas.filter(function (t) { return !cat || t.dataset.cat === cat; });
+      var propios = deCat.filter(function (t) { return responde(t, palabras, false); });
+      var elegidos = propios.length ? propios : deCat.filter(function (t) { return responde(t, palabras, true); });
       var visibles = tarjetas.filter(function (t) {
-        var ok = (!cat || t.dataset.cat === cat) &&
-                 palabras.every(function (p) { return norm(t.dataset.buscar).indexOf(p) >= 0; });
+        var ok = elegidos.indexOf(t) >= 0;
         t.hidden = !ok;
         if (ok) n++;
         return ok;
