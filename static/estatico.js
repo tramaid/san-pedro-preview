@@ -234,13 +234,12 @@
   var grilla = document.querySelector('[data-grilla-tienda]');
   if (grilla) {
     var tarjetas = Array.prototype.slice.call(grilla.querySelectorAll('li.card'));
-    var chips = document.querySelectorAll('.chips a[data-cat]');
+    var chips = document.querySelectorAll('.cats a[data-cat]');
     var form = document.querySelector('form.filtros'), q = form.elements.q, orden = form.elements.orden;
     var cuenta = document.querySelector('[data-cuenta]');
-    var vacio = document.createElement('li');
-    vacio.className = 'vacio';
-    vacio.innerHTML = '<p class="t"></p><p>Probá con otra palabra o mirá todas las categorías.</p>';
+    var vacio = grilla.querySelector('[data-vacio]');
     function norm(s) { return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+    function palabras(s) { return norm(s).split(/[^a-z0-9]+/).filter(Boolean); }
     var params = new URLSearchParams(location.search);
     var cat = params.get('cat') || '';
     q.value = params.get('q') || '';
@@ -248,17 +247,18 @@
     var hidden = form.querySelector('input[name="cat"]');
     if (hidden) hidden.remove();
 
-    // Como models/catalogo._coincide: primero lo que responde por sí mismo
-    // (nombre, bajada, medidas); la categoría, solo si nada responde.
-    function responde(t, palabras, conCat) {
-      var texto = norm(t.dataset.buscar + (conCat ? ' ' + t.dataset.buscarCat : ''));
-      return palabras.every(function (p) { return texto.indexOf(p) >= 0; });
+    // Como models/catalogo.buscar: cada palabra buscada, comienzo de una
+    // palabra del producto (nombre, bajada, medidas); la categoría, solo si
+    // nada responde. Filtra desde la primera letra.
+    function responde(t, buscadas, conCat) {
+      var propias = palabras(t.dataset.buscar + (conCat ? ' ' + t.dataset.buscarCat : ''));
+      return buscadas.every(function (b) { return propias.some(function (p) { return p.indexOf(b) === 0; }); });
     }
     function aplicar() {
-      var palabras = norm(q.value).split(/\s+/).filter(Boolean), n = 0;
+      var buscadas = palabras(q.value), n = 0;
       var deCat = tarjetas.filter(function (t) { return !cat || t.dataset.cat === cat; });
-      var propios = deCat.filter(function (t) { return responde(t, palabras, false); });
-      var elegidos = propios.length ? propios : deCat.filter(function (t) { return responde(t, palabras, true); });
+      var propios = deCat.filter(function (t) { return responde(t, buscadas, false); });
+      var elegidos = propios.length ? propios : deCat.filter(function (t) { return responde(t, buscadas, true); });
       var visibles = tarjetas.filter(function (t) {
         var ok = elegidos.indexOf(t) >= 0;
         t.hidden = !ok;
@@ -279,14 +279,14 @@
         orden_.sort(function (a, b) { return a.querySelector('h2').textContent.localeCompare(b.querySelector('h2').textContent, 'es'); });
       }
       orden_.forEach(function (t) { grilla.appendChild(t); });
-      if (!n) { vacio.querySelector('.t').textContent = 'No encontramos «' + q.value + '»'; grilla.appendChild(vacio); }
-      else if (vacio.parentNode) vacio.remove();
+      if (vacio) { vacio.hidden = n > 0; vacio.querySelector('[data-vacio-q]').textContent = q.value; grilla.appendChild(vacio); }
       cuenta.textContent = n + (n === 1 ? ' producto' : ' productos') + (q.value ? ' para «' + q.value + '»' : '');
       chips.forEach(function (a) { if (a.dataset.cat === cat) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
       var u = new URLSearchParams();
       if (cat) u.set('cat', cat);
       if (q.value) u.set('q', q.value);
       if (orden.value !== 'relevante') u.set('orden', orden.value);
+      if (new URLSearchParams(location.search).get('vista') === 'lista') u.set('vista', 'lista');
       history.replaceState(null, '', location.pathname + (u.toString() ? '?' + u : ''));
       return visibles;
     }

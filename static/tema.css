@@ -133,6 +133,8 @@ html{scroll-padding-top:calc(var(--hdr-c) + 16px)}
 
 .grilla{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:40px 24px;list-style:none;margin:24px 0 0;padding:0}
 .card{position:relative;display:flex;flex-direction:column;gap:10px;height:100%}
+/* la búsqueda y los filtros ocultan con `hidden`: sin esto, el display:flex lo pisa */
+.card[hidden]{display:none}
 .card-abrir{display:flex;flex-direction:column;gap:12px;color:inherit;text-decoration:none}
 .card-f{position:relative;display:block;width:100%;aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:var(--papel)}
 .card-f img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}

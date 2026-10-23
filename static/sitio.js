@@ -56,7 +56,7 @@
      entero, con su anillo; Chrome no mueve lo que ya se ve en parte. ──── */
   document.addEventListener('focusin', function (e) {
     var t = e.target;
-    if (t.closest && t.closest('.v-strip ul, .chips, .chips-h')) t.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    if (t.closest && t.closest('.v-strip ul, .chips, .chips-h, .cats')) t.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   });
 
   /* ── Agregar al pedido sin recargar (tarjetas y ficha) ───────────────── */
@@ -185,6 +185,110 @@
       if (b) b.classList.remove('js-ocultar');
     });
   });
+
+  /* ── Carrusel (Destacados de la home): las flechas pasan de a una pantalla
+     de tarjetas y se apagan en las puntas. Sin JS la fila igual se desliza
+     (scroll-snap) y las flechas no aparecen. ─────────────────────────── */
+  document.querySelectorAll('[data-carrusel]').forEach(function (c) {
+    var lista = c.querySelector('[data-carrusel-lista]'), nav = c.querySelector('[data-carrusel-nav]');
+    if (!lista || !nav) return;
+    var ant = nav.querySelector('[data-carrusel-ant]'), sig = nav.querySelector('[data-carrusel-sig]');
+    var quieto = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function estado() {
+      var max = lista.scrollWidth - lista.clientWidth - 2;
+      nav.hidden = max <= 0;
+      ant.disabled = lista.scrollLeft <= 2;
+      sig.disabled = lista.scrollLeft >= max;
+    }
+    function mover(sentido) {
+      var li = lista.querySelector('li'), gap = parseFloat(getComputedStyle(lista).columnGap) || 0;
+      var paso = li ? li.getBoundingClientRect().width + gap : lista.clientWidth;
+      var visibles = Math.max(1, Math.floor((lista.clientWidth + gap) / paso));
+      lista.scrollBy({ left: sentido * visibles * paso, behavior: quieto ? 'auto' : 'smooth' });
+    }
+    ant.addEventListener('click', function () { mover(-1); });
+    sig.addEventListener('click', function () { mover(1); });
+    lista.addEventListener('scroll', estado, { passive: true });
+    window.addEventListener('resize', estado);
+    estado();
+  });
+
+  /* ── Tienda: la búsqueda filtra mientras se escribe, desde la primera
+     letra. La página trae todas las cards de la categoría (las que no
+     responden, con `hidden`); acá se aplica la misma regla que
+     models/catalogo.buscar: cada palabra, comienzo de una palabra del
+     producto, y la categoría solo si nada responde. Enter sigue yendo al
+     servidor, con el mismo resultado. En la vista previa estática lo hace
+     static/estatico.js. ───────────────────────────────────────────────── */
+  var grillaT = document.querySelector('[data-grilla-tienda]');
+  var formT = document.querySelector('form.filtros');
+  if (!ESTATICO && grillaT && formT && formT.elements.q) {
+    var cartas = Array.prototype.slice.call(grillaT.querySelectorAll('li.card'));
+    var cuentaT = document.querySelector('[data-cuenta]'), vacioT = grillaT.querySelector('[data-vacio]');
+    var palabras = function (s) {
+      return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/[^a-z0-9]+/).filter(Boolean);
+    };
+    var responde = function (t, buscadas, conCat) {
+      var propias = palabras(t.dataset.buscar + (conCat ? ' ' + t.dataset.buscarCat : ''));
+      return buscadas.every(function (b) { return propias.some(function (p) { return p.indexOf(b) === 0; }); });
+    };
+    var esperaT;
+    formT.elements.q.addEventListener('input', function () {
+      var texto = formT.elements.q.value.trim(), buscadas = palabras(texto);
+      var elegidas = cartas.filter(function (t) { return responde(t, buscadas, false); });
+      if (!elegidas.length) elegidas = cartas.filter(function (t) { return responde(t, buscadas, true); });
+      cartas.forEach(function (t) { t.hidden = elegidas.indexOf(t) < 0; });
+      var n = elegidas.length;
+      cuentaT.textContent = n + (n === 1 ? ' producto' : ' productos') + (texto ? ' para «' + texto + '»' : '');
+      if (vacioT) { vacioT.hidden = n > 0; vacioT.querySelector('[data-vacio-q]').textContent = texto; }
+      var u = new URL(location.href);
+      if (texto) u.searchParams.set('q', texto); else u.searchParams.delete('q');
+      history.replaceState(null, '', u);
+      clearTimeout(esperaT);                      // el lector anuncia al dejar de escribir
+      esperaT = setTimeout(function () { avisar(cuentaT.textContent); }, 600);
+    });
+  }
+
+  /* ── Tienda: tarjetas o listado. Sin JS son links (?vista=lista); con JS
+     cambia en el lugar, se anota en la URL y se recuerda en el navegador
+     (si la URL no dice nada, vale la última elegida). ─────────────────── */
+  var vistas = document.querySelector('[data-vistas]'), grillaV = document.querySelector('[data-grilla-tienda]');
+  if (vistas && grillaV) {
+    var CLAVE_VISTA = 'tienda-vista';
+    var poner = function (v, anunciar) {
+      grillaV.classList.toggle('lista', v === 'lista');
+      vistas.querySelectorAll('a[data-vista]').forEach(function (a) {
+        if (a.dataset.vista === v) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+      });
+      var form = vistas.closest('form'), campo = form && form.querySelector('[data-vista-campo]');
+      if (v === 'lista' && form && !campo) {
+        campo = document.createElement('input');
+        campo.type = 'hidden'; campo.name = 'vista'; campo.setAttribute('data-vista-campo', '');
+        form.appendChild(campo);
+      }
+      if (campo) { if (v === 'lista') campo.value = v; else campo.remove(); }
+      var u = new URL(location.href);
+      if (v === 'lista') u.searchParams.set('vista', v); else u.searchParams.delete('vista');
+      history.replaceState(null, '', u);
+      if (anunciar) avisar(a11yVista(v));
+    };
+    var a11yVista = function (v) {
+      var a = vistas.querySelector('a[data-vista="' + v + '"] .sr');
+      return a ? a.textContent : '';
+    };
+    vistas.addEventListener('click', function (e) {
+      var a = e.target.closest('a[data-vista]');
+      if (!a) return;
+      e.preventDefault();
+      poner(a.dataset.vista, true);
+      try { localStorage.setItem(CLAVE_VISTA, a.dataset.vista); } catch (err) {}
+    });
+    if (!new URLSearchParams(location.search).has('vista')) {
+      var guardada = null;
+      try { guardada = localStorage.getItem(CLAVE_VISTA); } catch (err) {}
+      if (guardada === 'lista') poner('lista', false);
+    }
+  }
 
   /* ── Chips que filtran una grilla en el lugar (home, trabajos) ────────── */
   document.querySelectorAll('[data-chips]').forEach(function (chips) {

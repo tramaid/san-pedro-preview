@@ -72,8 +72,22 @@
 .v-tienda{position:relative;overflow:hidden;background:var(--crema);padding:72px 0 80px}
 .v-tienda .w{position:relative;z-index:1}
 .v-tienda h2{font-size:clamp(40px,4.6vw,64px);margin:8px 0 32px}
-.v-tienda .grilla{margin-top:0}
-.v-tienda .ver-todo{display:flex;justify-content:center;margin-top:36px}
+/* Destacados en una fila que se desliza: entran 4 tarjetas (3 y media, 2 y
+   media o 1 y media en pantallas más chicas, para que se note que sigue).
+   El padding deja lugar al anillo de foco y a la sombra del pedido. */
+.v-tienda .carr{display:grid;grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:calc((100% - 3 * 24px) / 4);gap:24px;margin:0 -8px;padding:8px 8px 16px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:8px}
+.v-tienda .carr>li{scroll-snap-align:start}
+.js .v-tienda .carr{scrollbar-width:none}
+.js .v-tienda .carr::-webkit-scrollbar{display:none}
+.carr-nav{display:flex;gap:10px;flex:none}
+.carr-nav[hidden]{display:none}
+.carr-b{display:grid;place-items:center;width:48px;height:48px;padding:0;border:2px solid var(--tinta);border-radius:9999px;background:transparent;color:var(--tinta);cursor:pointer;transition:background-color .2s ease,color .2s ease,opacity .2s ease}
+.carr-b .i{width:18px;height:18px}
+.carr-ant .i{transform:scaleX(-1)}
+.carr-b:disabled{opacity:.35;cursor:default}
+@media (hover:hover){.carr-b:not(:disabled):hover{background:var(--tinta);color:var(--blanco-puro)}}
+.v-tienda .ver-todo{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:28px}
+.v-tienda .ver-todo:has(.carr-nav[hidden]){justify-content:center}
 
 /* ── cómo comprar ───────────────────────────────────────────── */
 .v-como{position:relative;overflow:hidden;background:var(--fondo);padding:64px 0 72px}
@@ -124,6 +138,7 @@
   .cat-ram{display:none}
 }
 @media (max-width:1040px){
+  .v-tienda .carr{grid-auto-columns:calc((100% - 2 * 24px) / 2.5)}
   .v-hero-t,.v-col{grid-column:1/13}
   .v-hero-t{padding-left:0}
   .v-col{margin-top:40px;height:min(96vw,540px)}
@@ -142,6 +157,8 @@
   .v-cats>.ow{display:none}
 }
 @media (max-width:640px){
+  .v-tienda .carr{grid-auto-columns:calc((100% - 14px) / 1.6);gap:14px}
+  .carr-b{width:44px;height:44px}
   /* Se montan sobre los títulos: queda solo el del collage, más chico. */
   .v-home section>.ow{display:none}
   .v-como-h br,.v-mueb-t h2 br{display:none}
