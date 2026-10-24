@@ -283,10 +283,15 @@
       poner(a.dataset.vista, true);
       try { localStorage.setItem(CLAVE_VISTA, a.dataset.vista); } catch (err) {}
     });
-    if (!new URLSearchParams(location.search).has('vista')) {
+    var pedida = new URLSearchParams(location.search).get('vista');
+    if (pedida === null) {
       var guardada = null;
       try { guardada = localStorage.getItem(CLAVE_VISTA); } catch (err) {}
       if (guardada === 'lista') poner('lista', false);
+    } else if (pedida === 'lista' && !grillaV.classList.contains('lista')) {
+      // La vista previa estática es siempre la página en tarjetas: el
+      // listado de la URL (?vista=lista) lo pone el JS.
+      poner('lista', false);
     }
   }
 
