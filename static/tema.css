@@ -71,7 +71,7 @@ html{scroll-padding-top:calc(var(--hdr-c) + 16px)}
 .hdr-f.compacto .logo{transform:translateY(calc((var(--hdr-h) - var(--hdr-c)) / 2)) scale(var(--logo-s))}
 .hdr-f.compacto .hdr>nav,.hdr-f.compacto .hdr-der{transform:translateY(calc((var(--hdr-h) - var(--hdr-c)) / 2))}
 .hdr{display:flex;align-items:center;justify-content:space-between;gap:28px;height:var(--hdr-h)}
-.logo{display:block;width:158px;flex:none}
+.logo{display:block;width:140px;flex:none}
 .logo img{width:100%;height:auto}
 .nav{display:flex;gap:28px;list-style:none;margin:0;padding:0}
 .nav a{font-size:15px;font-weight:700;text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
@@ -210,7 +210,7 @@ html{scroll-padding-top:calc(var(--hdr-c) + 16px)}
   .w{padding-left:16px;padding-right:16px}
   .hdr{gap:12px}
   .hdr-der{gap:8px}
-  .logo{width:116px}
+  .logo{width:108px}
   .pedido>span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .pedido{gap:8px;padding:8px 12px 8px 14px}
   .pedido-ic{display:block;width:20px;height:20px}
